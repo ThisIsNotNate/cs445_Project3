@@ -17,4 +17,133 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/buttonReturnToMenu"
+        android:layout_width="50sp"
+        android:layout_height="50sp"
+        android:background="@android:drawable/btn_dialog"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TableLayout
+        android:layout_width="240sp"
+        android:layout_height="174dp"
+        android:layout_marginStart="244dp"
+        android:layout_marginLeft="244dp"
+        android:layout_marginTop="24dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/HighScores">
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/HSName1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/HSPlayer1"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/HSScore1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20sp"
+                android:text="@string/HSScore1"
+                android:textSize="24sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="240sp"
+            android:layout_height="80sp"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/HSName2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/HSPlayer2"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/HSScore2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20sp"
+                android:text="@string/HSScore2"
+                android:textSize="24sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/HSName3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/HSPlayer3"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/HSScore3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20sp"
+                android:text="@string/HSScore3"
+                android:textSize="24sp" />
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/HSName4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/HSPlayer4"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/HSScore4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="20sp"
+                android:text="@string/HSScore4"
+                android:textSize="24sp" />
+
+        </TableRow>
+
+        <TableRow
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            tools:layout_editor_absoluteX="8dp"
+            tools:layout_editor_absoluteY="93dp">
+
+            <TextView
+                android:id="@+id/HSName5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/HSPlayer5"
+                android:textSize="24sp" />
+
+            <TextView
+                android:id="@+id/HSScore5"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="20sp"
+                android:text="@string/HSScoreDev"
+                android:textSize="24sp" />
+        </TableRow>
+    </TableLayout>
+
 </android.support.constraint.ConstraintLayout>
