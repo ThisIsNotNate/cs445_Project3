@@ -1,12 +1,18 @@
 package com.example.gravrun;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.view.SurfaceView;
 import android.view.SurfaceHolder;
 
 public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     private com.example.gravrun.MainThread thread;
+    long fps;
+
+    float gravRunnerX = 50;
+    Bitmap gravRunner;
+
 
     public GameView(Context context){
         super(context);
@@ -35,6 +41,7 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
             try{
                 thread.setRunning(false);
                 thread.join();
+                keepTrying = false;
             }catch(Exception e){e.printStackTrace();}
         }
     }
@@ -45,6 +52,8 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void draw(Canvas canvas){
+
         super.draw(canvas);
+
     }
 }
