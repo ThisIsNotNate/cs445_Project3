@@ -16,6 +16,7 @@ public class GameView extends SurfaceView implements Runnable {
     private Thread gameThread = null;
     long fps=1;
     long timeThisFrame;
+    long lastFrameChangeTime = 0;
 
     float gravRunnerX = 200;
     private int frameWidth = 75;
@@ -23,7 +24,7 @@ public class GameView extends SurfaceView implements Runnable {
     Bitmap gravRunner;
     private int frameCount = 8;
     private int currentFrame = 0;
-    private int frameDuration =20000; // in ms
+    private int frameDuration = 50; // in ms
     private Rect spriteFrame = new Rect(0,0,frameWidth, frameHeight);
     private RectF drawFrame = new RectF(gravRunnerX,0, gravRunnerX+frameWidth, frameHeight);
 
@@ -111,8 +112,8 @@ public class GameView extends SurfaceView implements Runnable {
 
         long time = System.currentTimeMillis();
         if (running) {
-            if (time > timeThisFrame + frameDuration) {
-                timeThisFrame = time;
+            if (time > lastFrameChangeTime + frameDuration) {
+                lastFrameChangeTime = time;
                 currentFrame++;
                 if (currentFrame >= frameCount) {
 
