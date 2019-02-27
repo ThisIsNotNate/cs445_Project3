@@ -15,14 +15,14 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 public class GameActivity extends Activity {
-
+    private GameView game;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        game = new GameView(this);
 
-        GameView game = new GameView(this);
         FrameLayout frame = new FrameLayout(this);
         LinearLayout buttons = new LinearLayout(this);
         Button invertGravity = new Button(this);
@@ -54,7 +54,7 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Log.i("Button Pressed", "Invert Gravity");
-                //game.invertGravity()
+                game.invertGravity();
             }
         });
 
@@ -62,7 +62,7 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Log.i("Button Pressed", "Jump");
-                //game.jump()
+                game.jump();
             }
         });
     }

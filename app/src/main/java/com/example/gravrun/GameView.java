@@ -18,6 +18,8 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.ArrayList;
+
 public class GameView extends SurfaceView implements Runnable {
     int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
     int screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
@@ -27,27 +29,26 @@ public class GameView extends SurfaceView implements Runnable {
     long timeThisFrame;
     long lastFrameChangeTime = 0;
 
-    private int frameWidth = 75;
-    private int frameHeight = 108;
-
-    float gravRunnerX = 200;
-    float gravRunnerY = screenHeight-50-frameHeight;
-
-    Bitmap gravRunner;
-    private int frameCount = 8;
+    private int frameCount = 8; //All animations have 8 frames
     private int currentFrame = 0;
     private int frameDuration = 50; // in ms
-    private Rect spriteFrame = new Rect(0,0,frameWidth, frameHeight);
-    private RectF drawFrame = new RectF(gravRunnerX,gravRunnerY, gravRunnerX+frameWidth, gravRunnerY+frameHeight);
 
     private SurfaceHolder surfaceHolder;
     private boolean running;
     public static Canvas canvas;
     public Paint paint;
 
+    boolean inverseGravity = false;
+
     Bitmap floor;
 
-    private Rect floorFrame = new Rect(0, 0, screenHeight,50);
+    Character gravRunner;
+
+    private Rect gravSpriteFrame;
+    private RectF gravDrawFrame;
+    ArrayList<Object> entities = new ArrayList<>();
+
+    //private Rect floorFrame = new Rect(0, 0, screenHeight,50);
 
 
 
@@ -55,13 +56,13 @@ public class GameView extends SurfaceView implements Runnable {
         super(context);
 
         surfaceHolder = getHolder();
-        gravRunner = BitmapFactory.decodeResource(this.getResources(), R.drawable.gravrunner_spritesheet);
-        gravRunner = Bitmap.createScaledBitmap(gravRunner, frameWidth*frameCount, frameHeight, false);
+
         floor = BitmapFactory.decodeResource(this.getResources(), R.mipmap.game_floor);
         floor = Bitmap.createScaledBitmap(floor, screenHeight, 50, false);
 
         paint = new Paint();
-
+        gravRunner = new Character(context);
+        entities.add(gravRunner);
         running = true;
         gameThread = new Thread(this);
         gameThread.start();
@@ -72,6 +73,7 @@ public class GameView extends SurfaceView implements Runnable {
     public void update(){
         //where we'll update game code
         //gravRunnerX = gravRunnerX + (60/fps);
+        gravRunner.updateY(inverseGravity,timeThisFrame);
     }
 
     @SuppressLint("MissingSuperCall")
@@ -81,23 +83,21 @@ public class GameView extends SurfaceView implements Runnable {
         if(surfaceHolder.getSurface().isValid()){
             canvas = surfaceHolder.lockCanvas();
 
-            drawFrame.set(gravRunnerX,gravRunnerY, gravRunnerX+frameWidth, gravRunnerY+frameHeight);
-
             canvas.drawColor(Color.argb(255, 26, 128, 182));
             paint.setColor(Color.argb(255, 249, 129, 0));
             paint.setTextSize(40);
 
-            canvas.drawText("FPS:"+fps, 20, 40, paint);
+            canvas.drawText("FPS:"+fps, 20, 80, paint);
 
-            drawFrame.set(gravRunnerX, gravRunnerY, gravRunnerX+frameWidth, gravRunnerY+frameHeight);
+            RectF drawFrame = gravRunner.getDrawFrame();
+            Rect spriteFrame = gravRunner.getSpriteFrame();
             getCurrentFrame();
-            canvas.drawBitmap(gravRunner, spriteFrame, drawFrame, paint);
+            canvas.drawBitmap(gravRunner.getBitmap(), spriteFrame, drawFrame, paint);
             paint.setColor(Color.argb(255, 90, 90, 90));
             canvas.drawRect(0,0,screenWidth,50,paint);
             canvas.drawRect(0,screenHeight-50,screenWidth,screenHeight,paint);
             surfaceHolder.unlockCanvasAndPost(canvas);
         }
-        //super.draw(canvas);
     }
 
     public void pause() {
@@ -129,6 +129,8 @@ public class GameView extends SurfaceView implements Runnable {
             if(timeThisFrame >= 1)
                 fps = 1000/timeThisFrame;
         }
+
+
     }
 
     public void getCurrentFrame() {
@@ -142,11 +144,17 @@ public class GameView extends SurfaceView implements Runnable {
 
                     currentFrame = 0;
                 }
+                gravRunner.nextSpriteFrame(currentFrame);
             }
 
-            spriteFrame.left = currentFrame * frameWidth;
-            spriteFrame.right = (int)spriteFrame.left + frameWidth;
-
         }
+    }
+
+    public void invertGravity(){
+        inverseGravity = !inverseGravity;
+    }
+
+    public void jump(){
+        gravRunner.jump(inverseGravity);
     }
 }
