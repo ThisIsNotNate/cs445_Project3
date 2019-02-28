@@ -25,12 +25,16 @@ public class Character {
 
 
     Bitmap gravRunner;
+    Bitmap invertedGravRunner;
 
+    private Rect currentSpriteFrame;
     private Rect spriteFrame;
     private RectF drawFrame;
     public Character(Context context){
         gravRunner = BitmapFactory.decodeResource(context.getResources(), R.drawable.gravrunner_spritesheet);
         gravRunner = Bitmap.createScaledBitmap(gravRunner, frameWidth*frameCount, frameHeight, false);
+        invertedGravRunner = BitmapFactory.decodeResource(context.getResources(), R.drawable.gravrunner_invertedsprites);
+        invertedGravRunner = Bitmap.createScaledBitmap(invertedGravRunner, frameWidth*frameCount, frameHeight, false);
 
         spriteFrame = new Rect(0,0,frameWidth, frameHeight);
         drawFrame = new RectF(posX,posY, posX+frameWidth, posY+frameHeight);
@@ -64,8 +68,11 @@ public class Character {
         return spriteFrame;
     }
 
-    public Bitmap getBitmap(){
-        return gravRunner;
+    public Bitmap getBitmap(boolean inverseGravity){
+        if(!inverseGravity)
+            return gravRunner;
+        else
+            return invertedGravRunner;//something's wrong witht his bitmap
     }
 
     public void nextSpriteFrame(int currentFrame){

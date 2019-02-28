@@ -92,7 +92,7 @@ public class GameView extends SurfaceView implements Runnable {
             RectF drawFrame = gravRunner.getDrawFrame();
             Rect spriteFrame = gravRunner.getSpriteFrame();
             getCurrentFrame();
-            canvas.drawBitmap(gravRunner.getBitmap(), spriteFrame, drawFrame, paint);
+            canvas.drawBitmap(gravRunner.getBitmap(inverseGravity), spriteFrame, drawFrame, paint);
             paint.setColor(Color.argb(255, 90, 90, 90));
             canvas.drawRect(0,0,screenWidth,50,paint);
             canvas.drawRect(0,screenHeight-50,screenWidth,screenHeight,paint);
