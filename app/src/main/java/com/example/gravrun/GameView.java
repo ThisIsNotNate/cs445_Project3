@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 public class GameView extends SurfaceView implements Runnable {
     int screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
@@ -41,12 +43,14 @@ public class GameView extends SurfaceView implements Runnable {
     boolean inverseGravity = false;
 
     Bitmap floor;
-
+    //
+    // Bitmap spikes;
+    Spike spike;
     Character gravRunner;
 
-    private Rect gravSpriteFrame;
-    private RectF gravDrawFrame;
-    ArrayList<Object> entities = new ArrayList<>();
+
+    ArrayList<Spike> entities = new ArrayList<>();
+    Context context;
 
     //private Rect floorFrame = new Rect(0, 0, screenHeight,50);
 
@@ -54,15 +58,21 @@ public class GameView extends SurfaceView implements Runnable {
 
     public GameView(Context context){
         super(context);
-
+        this.context = context;
         surfaceHolder = getHolder();
+
+
 
         floor = BitmapFactory.decodeResource(this.getResources(), R.mipmap.game_floor);
         floor = Bitmap.createScaledBitmap(floor, screenHeight, 50, false);
 
+//        spikes = BitmapFactory.decodeResource(context.getResources(), R.drawable.spikes);
+//        spikes = Bitmap.createScaledBitmap(spikes, 150, 50, false);
+
         paint = new Paint();
         gravRunner = new Character(context);
-        entities.add(gravRunner);
+        spike = new Spike(context, true);
+        entities.add(spike);
         running = true;
         gameThread = new Thread(this);
         gameThread.start();
@@ -74,6 +84,20 @@ public class GameView extends SurfaceView implements Runnable {
         //where we'll update game code
         //gravRunnerX = gravRunnerX + (60/fps);
         gravRunner.updateY(inverseGravity,timeThisFrame);
+        //spike.updateX();
+        Random rand = new Random();
+        for(Spike a: entities){
+            a.updateX();
+
+            if(a.getDrawFrame().intersect(gravRunner.getDrawFrame())){
+                gameover();
+            }
+
+            if(a.offScreen()){
+                //entities.remove(a);
+                //entities.add(new Spike(this.context, rand.nextBoolean()));
+            }
+        }
     }
 
     @SuppressLint("MissingSuperCall")
@@ -87,11 +111,18 @@ public class GameView extends SurfaceView implements Runnable {
             paint.setColor(Color.argb(255, 249, 129, 0));
             paint.setTextSize(40);
 
-            canvas.drawText("FPS:"+fps, 20, 80, paint);
+            //canvas.drawText("FPS:"+fps, 20, 80, paint);
 
             RectF drawFrame = gravRunner.getDrawFrame();
             Rect spriteFrame = gravRunner.getSpriteFrame();
             getCurrentFrame();
+//            for(Spike a: entities){
+//                Bitmap spike = a.getBitmap();
+//                RectF spikeDraw = a.getDrawFrame();
+//                Rect spikeSprite = a.getSpriteFrame();
+//                canvas.drawBitmap(spike, spikeSprite, spikeDraw, paint);
+//            }
+            canvas.drawBitmap(spike.getBitmap(), spike.getSpriteFrame(),spike.getDrawFrame(),paint);
             canvas.drawBitmap(gravRunner.getBitmap(inverseGravity), spriteFrame, drawFrame, paint);
             paint.setColor(Color.argb(255, 90, 90, 90));
             canvas.drawRect(0,0,screenWidth,50,paint);
@@ -118,6 +149,8 @@ public class GameView extends SurfaceView implements Runnable {
 
     @Override
     public void run() {
+        int count = 0;
+
         while(running){
             long startTime = System.currentTimeMillis();
 
@@ -126,11 +159,23 @@ public class GameView extends SurfaceView implements Runnable {
             draw(canvas);
 
             timeThisFrame = System.currentTimeMillis()-startTime;
-            if(timeThisFrame >= 1)
-                fps = 1000/timeThisFrame;
+            if(timeThisFrame >= 1) {
+                fps = 1000 / timeThisFrame;
+//                if(count > 1000) {
+//                    entities.add(new Spike(this.context, rand.nextBoolean()));
+//                    count = 0;
+//                    Log.i("Spike created","spike created");
+//                }
+//                else
+//                    count++;
+            }
         }
 
 
+    }
+
+    public void gameover(){
+        Log.i("Player Hit", "By spike");
     }
 
     public void getCurrentFrame() {
@@ -151,7 +196,10 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public void invertGravity(){
-        inverseGravity = !inverseGravity;
+        if(gravRunner.canInvert) {
+            inverseGravity = !inverseGravity;
+            gravRunner.cantInvert();
+        }
     }
 
     public void jump(){
